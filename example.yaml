@@ -5,7 +5,7 @@ esp32:
     type: arduino
 
 esphome:
-  name: tablet
+  name: m5paper
   on_boot:
     priority: 750.0
     then:
@@ -13,6 +13,13 @@ esphome:
       - delay: 100ms
       - component.update: m5paper_display
 
+external_components:
+  - source:
+      type: git
+      url: https://github.com/BluetriX/m5paper_esphome
+      ref: main
+    components: [ bm8563, gt911, it8951e, m5paper, spi ]
+    
 # Enable logging
 logger:
 
@@ -21,11 +28,21 @@ psram:
 
 # Enable Home Assistant API
 api:
-  password: ""
+  encryption: 
+    key: "rrVoOaXSkSp/B0xZJlgPQS/+JCN7mvMQTWsRVx5rDSk="
 
 ota:
-  safe_mode: false
-  password: ""
+  password: "b0b4026c10c7d4a1152169d16fbe0a1c"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+# Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "M5Paper Fallback Hotspot"
+    password: "5LDgjqkLCPjZ"
+
+captive_portal:
 
 font:
   - file: "gfonts://Roboto"
@@ -52,7 +69,7 @@ display:
     busy_pin: GPIO27
     rotation: 90
     reversed: False
-    update_interval: "never"
+    update_interval: "10s"
     lambda: |-
       it.printf(25, 25, id(large_font), "%.1f°", id(current_temperature).state);
       it.strftime(350, 25, id(large_font), "%H:%M:%S", id(rtc_time).now());
@@ -76,11 +93,6 @@ touchscreen:
 #    pins:
 #      - GPIO37
 #    mode: ALL_LOW
-
-wifi:
-  ssid: YOUR SSID
-  password: YOUR PASSWORD
-  power_save_mode: "HIGH"
 
 time:
   - platform: homeassistant
@@ -143,5 +155,4 @@ binary_sensor:
       - bm8563.apply_sleep_duration
       - delay: 1s
       - m5paper.shutdown_main_power
-
 
