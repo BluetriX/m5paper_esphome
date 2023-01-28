@@ -28,10 +28,10 @@ ota:
   password: ""
 
 font:
-  - file: 'fonts/ComicSansMS3.ttf'
+  - file: "gfonts://Roboto"
     id: font1
     size: 20
-  - file: 'fonts/ComicSansMS3.ttf'
+  - file: "gfonts://Roboto"
     id: large_font
     size: 40
 
@@ -102,6 +102,7 @@ sensor:
   - platform: sht3xd
     temperature:
       name: "M5Paper Temperature"
+      id: current_temperature
     humidity:
       name: "M5Paper Humidity"
     address: 0x44
